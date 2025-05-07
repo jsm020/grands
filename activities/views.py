@@ -8,6 +8,7 @@ import requests
 from drf_yasg import openapi
 
 from drf_yasg.utils import swagger_auto_schema
+import os
 
 @swagger_auto_schema(
     method='post',
@@ -50,7 +51,8 @@ def login_api(request):
     # headers = {'Authorization': f'Bearer {personal_token}'}
     # resp = requests.post(url, json={...}, headers=headers, timeout=10)
 
-    personal_token = ''  # <-- BU YERGA O'Z TOKENINGIZNI QO'YING
+    # Token .env faylidan olinadi
+    personal_token = os.environ.get('SAMDUKF_PERSONAL_TOKEN', '')
     headers = {'Authorization': f'Bearer {personal_token}'}
 
     # Debug uchun so'rov va javobni terminalga chiqaramiz
