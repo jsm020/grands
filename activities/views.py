@@ -76,6 +76,49 @@ def login_api(request):
         User = get_user_model()
         user, created = User.objects.get_or_create(username=username)
         ExternalAuthToken.objects.update_or_create(user=user, defaults={'token': token})
+
+        # --- Yangi: Profil ma'lumotlarini olish va saqlash ---
+        me_url = 'https://student.samdukf.uz/rest/v1/account/me'
+        me_headers = {'Authorization': f'Bearer {token}'}
+        try:
+            me_resp = requests.get(me_url, headers=me_headers, timeout=10)
+            print(f"GET {me_url} status: {me_resp.status_code}")
+            print(f"GET {me_url} body: {me_resp.text}")
+        except Exception as e:
+            print(f"Exception (me): {e}")
+            return Response({'error': 'Profil maʼlumotlarini olishda xatolik.'}, status=status.HTTP_502_BAD_GATEWAY)
+
+        if me_resp.status_code == 200:
+            me_data = me_resp.json().get('data', {})
+            from datetime import datetime
+            birth_date = None
+            if me_data.get('birth_date'):
+                try:
+                    birth_date = datetime.utcfromtimestamp(int(me_data['birth_date'])).date()
+                except Exception:
+                    birth_date = None
+            group_name = ''
+            if isinstance(me_data.get('group'), dict):
+                group_name = me_data['group'].get('name', '')
+            from .models import UserProfile
+            UserProfile.objects.update_or_create(
+                user=user,
+                defaults={
+                    'first_name': me_data.get('first_name', ''),
+                    'second_name': me_data.get('second_name', ''),
+                    'third_name': me_data.get('third_name', ''),
+                    'full_name': me_data.get('full_name', ''),
+                    'image': me_data.get('image', ''),
+                    'birth_date': birth_date,
+                    'passport_pin': me_data.get('passport_pin', ''),
+                    'passport_number': me_data.get('passport_number', ''),
+                    'university': me_data.get('university', ''),
+                    'group_name': group_name,
+                }
+            )
+        else:
+            print('Profil maʼlumotlarini olishda xatolik:', me_resp.text)
+
         return Response({'success': True, 'token': token})
     else:
         try:
