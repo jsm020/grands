@@ -45,7 +45,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 class FileUploadViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,IsSuperUser]
+    permission_classes = [permissions.IsAuthenticated, IsSuperUser]
     @swagger_auto_schema(
         operation_description="Fayl yuklash va faoliyat ma'lumotlarini yaratish",
         request_body=openapi.Schema(
