@@ -1,4 +1,6 @@
-Django>=5.2
+django>=5.2
+python-dotenv
+jazzmin
 requests
 djangorestframework
 drf-yasg

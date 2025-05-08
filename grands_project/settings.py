@@ -36,7 +36,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+
 INSTALLED_APPS = [
+    "jazzmin",  # Jazzmin admin theme
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -46,8 +48,8 @@ INSTALLED_APPS = [
     "activities",
     "drf_yasg",
     "rest_framework",
+    "corsheaders",
 ]
-INSTALLED_APPS += ["corsheaders"]
 
 
 CORS_ALLOW_ALL_ORIGINS = True  # Faqat test uchun, prod-da ehtiyot bo‘ling!
