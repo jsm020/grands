@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import api_view
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -186,6 +187,11 @@ def login_api(request):
         user, created = User.objects.get_or_create(username=username)
         ExternalAuthToken.objects.update_or_create(user=user, defaults={'token': token})
 
+        # JWT token generatsiya qilish
+        refresh = RefreshToken.for_user(user)
+        jwt_access = str(refresh.access_token)
+        jwt_refresh = str(refresh)
+
         # --- Yangi: Profil ma'lumotlarini olish va saqlash ---
         me_url = 'https://student.samdukf.uz/rest/v1/account/me'
         me_headers = {'Authorization': f'Bearer {token}'}
@@ -259,7 +265,12 @@ def login_api(request):
         from .models import UserGPA
         UserGPA.objects.update_or_create(user=user, defaults={'gpa_score': gpa_score})
 
-        return Response({'success': True, 'token': token})
+        return Response({
+            'success': True,
+            'external_token': token,
+            'jwt_access': jwt_access,
+            'jwt_refresh': jwt_refresh,
+        })
     else:
         try:
             error_msg = resp.json().get('error', 'Login yoki parol xato.')
