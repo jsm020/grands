@@ -4,6 +4,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
+
+from activities.permissions import IsSuperUser
 from .models import ExternalAuthToken, ReadingCulture
 from .serializers import LoginSerializer
 import requests
@@ -43,14 +45,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 class FileUploadViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        user = self.request.user
-        if user.is_superuser or user.is_staff:
-            return qs
-        return qs.filter(user=user)
+    permission_classes = [permissions.IsAuthenticated,IsSuperUser]
     @swagger_auto_schema(
         operation_description="Fayl yuklash va faoliyat ma'lumotlarini yaratish",
         request_body=openapi.Schema(
