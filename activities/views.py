@@ -57,10 +57,10 @@ def login_api(request):
 
     # Debug uchun so'rov va javobni terminalga chiqaramiz
     print(f"POST {url}")
-    print(f"Request body: {{'username': '{username}', 'password': '***'}}")
+    print(f"Request body: {{'login': '{username}', 'password': '***'}}")
     print(f"Headers: {headers}")
     try:
-        resp = requests.post(url, json={'username': username, 'password': password}, headers=headers, timeout=10)
+        resp = requests.post(url, json={'login': username, 'password': password}, headers=headers, timeout=10)
         print(f"Response status: {resp.status_code}")
         print(f"Response body: {resp.text}")
     except Exception as e:
@@ -69,7 +69,7 @@ def login_api(request):
 
     if resp.status_code == 200:
         resp_data = resp.json()
-        token = resp_data.get('token')
+        token = resp_data.get('data').get('token')
         if not token:
             return Response({'error': 'Tashqi API token qaytarmadi.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
