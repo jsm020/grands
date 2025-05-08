@@ -37,6 +37,7 @@ class UserProfile(models.Model):
     passport_number = models.CharField(max_length=32, blank=True)
     university = models.CharField(max_length=256, blank=True)
     group_name = models.CharField(max_length=128, blank=True)
+    course_level = models.CharField(max_length=32, blank=True)  # yangi: kurs nomi (masalan, '1-kurs')
 
     def __str__(self):
         return self.full_name or self.user.username

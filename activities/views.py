@@ -209,6 +209,13 @@ def login_api(request):
             group_name = ''
             if isinstance(me_data.get('group'), dict):
                 group_name = me_data['group'].get('name', '')
+            # yangi: kurs nomi (level.name)
+            course_level = ''
+            if isinstance(me_data.get('level'), dict):
+                course_level = me_data['level'].get('name', '')
+            # Faqat 1-kurs bo'lsa davom etadi, aks holda xatolik va user/token saqlanmaydi
+            if course_level.strip() != '1-kurs':
+                return Response({'error': "Faqat 1-kurs talabalari ro'yxatdan o'tishi mumkin."}, status=status.HTTP_403_FORBIDDEN)
             from .models import UserProfile
             UserProfile.objects.update_or_create(
                 user=user,
@@ -223,6 +230,7 @@ def login_api(request):
                     'passport_number': me_data.get('passport_number', ''),
                     'university': me_data.get('university', ''),
                     'group_name': group_name,
+                    'course_level': course_level,
                 }
             )
         else:
