@@ -267,7 +267,6 @@ def login_api(request):
 
         return Response({
             'success': True,
-            'external_token': token,
             'jwt_access': jwt_access,
             'jwt_refresh': jwt_refresh,
         })
