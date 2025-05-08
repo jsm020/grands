@@ -38,8 +38,39 @@ from .serializers import (
 )
 
 # Generic file upload viewset
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 class FileUploadViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_description="Fayl yuklash va faoliyat ma'lumotlarini yaratish",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['file'],
+            properties={
+                'file': openapi.Schema(type=openapi.TYPE_FILE, description='Yuklanadigan fayl'),
+            },
+        ),
+        responses={
+            201: openapi.Response(
+                description="Yaratilgan obyekt ma'lumotlari",
+                examples={
+                    "application/json": {
+                        "id": 1,
+                        "user": 1,
+                        "file": "/media/activities/example.pdf",
+                        "created_at": "2024-05-08T12:00:00Z"
+                    }
+                }
+            ),
+            400: openapi.Response(description="Xatolik yoki validatsiya xabari")
+        }
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
