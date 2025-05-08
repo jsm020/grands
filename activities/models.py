@@ -1,6 +1,8 @@
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+import os
 User = get_user_model()
 
 class UserGPA(models.Model):
@@ -11,12 +13,7 @@ class UserGPA(models.Model):
     def __str__(self):
         return f"{self.user.username} GPA: {self.gpa_score}"
 
-from django.db import models
-from django.contrib.auth import get_user_model
-User = get_user_model()
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
-import os
+
 
 def validate_file_extension_and_size(value):
     allowed_extensions = ['.pdf', '.doc', '.docx', '.png', '.jpeg', '.jpg']
@@ -27,7 +24,6 @@ def validate_file_extension_and_size(value):
     if value.size > max_size:
         raise ValidationError("Fayl hajmi 30 MB dan oshmasligi kerak.")
 
-User = get_user_model()
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')

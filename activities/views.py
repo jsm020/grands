@@ -1,5 +1,15 @@
 from rest_framework import viewsets, permissions
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import get_user_model
+from .models import ExternalAuthToken, ReadingCulture
+from .serializers import LoginSerializer
+import requests
+from drf_yasg import openapi
 
+from drf_yasg.utils import swagger_auto_schema
+import os
 from .models import (
     ReadingCulture,
     FiveInitiativesParticipation,
@@ -76,17 +86,7 @@ class SportsAndHealthyLifestyleViewSet(FileUploadViewSet):
 class SpiritualAndEducationalActivityViewSet(FileUploadViewSet):
     queryset = SpiritualAndEducationalActivity.objects.all()
     serializer_class = SpiritualAndEducationalActivitySerializer
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth import get_user_model
-from .models import ExternalAuthToken, ReadingCulture
-from .serializers import LoginSerializer
-import requests
-from drf_yasg import openapi
 
-from drf_yasg.utils import swagger_auto_schema
-import os
 
 @swagger_auto_schema(
     method='post',
