@@ -1,6 +1,20 @@
 
 from django.db import models
 from django.contrib.auth import get_user_model
+User = get_user_model()
+
+class UserGPA(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='gpa')
+    gpa_score = models.FloatField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} GPA: {self.gpa_score}"
+
+from django.db import models
+from django.contrib.auth import get_user_model
+User = get_user_model()
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 import os
 

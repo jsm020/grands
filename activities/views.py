@@ -119,6 +119,25 @@ def login_api(request):
         else:
             print('Profil maʼlumotlarini olishda xatolik:', me_resp.text)
 
+        # --- Yangi: GPA olish va saqlash ---
+        gpa_url = 'https://student.samdukf.uz/rest/v1/education/gpa-list'
+        gpa_headers = {'Authorization': f'Bearer {token}'}
+        try:
+            gpa_resp = requests.get(gpa_url, headers=gpa_headers, timeout=10)
+            print(f"GET {gpa_url} status: {gpa_resp.status_code}")
+            print(f"GET {gpa_url} body: {gpa_resp.text}")
+        except Exception as e:
+            print(f"Exception (gpa): {e}")
+            gpa_score = None
+        else:
+            if gpa_resp.status_code == 200:
+                gpa_data = gpa_resp.json().get('data', {})
+                gpa_score = gpa_data.get('gpa')
+            else:
+                gpa_score = None
+        from .models import UserGPA
+        UserGPA.objects.update_or_create(user=user, defaults={'gpa_score': gpa_score})
+
         return Response({'success': True, 'token': token})
     else:
         try:

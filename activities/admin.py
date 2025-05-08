@@ -1,8 +1,7 @@
-from .models import UserProfile
-from django.contrib import admin
-admin.site.register(UserProfile)
 from django.contrib import admin
 from .models import (
+    UserProfile,
+    UserGPA,
     ReadingCulture,
     FiveInitiativesParticipation,
     AcademicPerformance,
@@ -17,15 +16,25 @@ from .models import (
     ExternalAuthToken,
 )
 
-admin.site.register(ReadingCulture)
-admin.site.register(FiveInitiativesParticipation)
-admin.site.register(AcademicPerformance)
-admin.site.register(DisciplineAndEthics)
-admin.site.register(CompetitionAchievements)
-admin.site.register(Attendance)
-admin.site.register(EnlightenmentLessonsParticipation)
-admin.site.register(VolunteeringAndCommunityWork)
-admin.site.register(CulturalVisits)
-admin.site.register(SportsAndHealthyLifestyle)
-admin.site.register(SpiritualAndEducationalActivity)
-admin.site.register(ExternalAuthToken)
+for model in [
+    UserProfile,
+    UserGPA,
+    ReadingCulture,
+    FiveInitiativesParticipation,
+    AcademicPerformance,
+    DisciplineAndEthics,
+    CompetitionAchievements,
+    Attendance,
+    EnlightenmentLessonsParticipation,
+    VolunteeringAndCommunityWork,
+    CulturalVisits,
+    SportsAndHealthyLifestyle,
+    SpiritualAndEducationalActivity,
+    ExternalAuthToken,
+]:
+    try:
+        admin.site.register(model)
+    except admin.sites.AlreadyRegistered:
+        pass
+
+
