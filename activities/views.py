@@ -45,6 +45,12 @@ from drf_yasg import openapi
 class FileUploadViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        user = self.request.user
+        if user.is_superuser or user.is_staff:
+            return qs
+        return qs.filter(user=user)
     @swagger_auto_schema(
         operation_description="Fayl yuklash va faoliyat ma'lumotlarini yaratish",
         request_body=openapi.Schema(
